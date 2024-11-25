@@ -35,7 +35,7 @@ export const modelConfigs = {
     'claude-sonnet': {
         name: 'Claude 3.5 Sonnet',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "anthropic/claude-3-sonnet-20240229",  // Updated model name
+        model: "claude-3-5-sonnet-20241022",  // Updated model name to match example
         apiType: 'together',
         supportsVision: false
     },
@@ -46,4 +46,22 @@ export const modelConfigs = {
         apiType: 'together',
         supportsVision: false
     }
+};
+
+export const createClient = (modelId) => {
+    const config = modelConfigs[modelId];
+    
+    if (!API_KEY) {
+        throw new Error('API key not found. Please set the VITE_API_KEY environment variable.');
+    }
+    
+    // Using OpenAI's client format since Together API is compatible with it
+    return {
+        type: 'together',
+        client: new OpenAI({
+            apiKey: API_KEY,
+            baseURL: config.baseUrl,
+            dangerouslyAllowBrowser: true
+        })
+    };
 };

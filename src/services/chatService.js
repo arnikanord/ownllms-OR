@@ -132,15 +132,30 @@ export class ChatService {
             model: this.modelConfig.model,
             max_tokens: 2048,
             system: messages[0].content,
-            messages: messages.slice(1).map(msg => ({ 
-                role: msg.role, 
-                content: msg.content 
+            messages: messages.slice(1).map(msg => ({
+                role: msg.role,
+                content: msg.content
             }))
         });
         return response.content;
     }
 
     async handleTogetherRequest(messages) {
+        // For Claude model, use a different format
+        if (this.modelConfig.model === "claude-3-5-sonnet-20241022") {
+            const response = await this.client.chat.completions.create({
+                model: this.modelConfig.model,
+                max_tokens: 2048,
+                system: messages[0].content,
+                messages: messages.slice(1).map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                }))
+            });
+            return response.choices[0].message.content;
+        }
+        
+        // For other models, use the standard format
         const response = await this.client.chat.completions.create({
             model: this.modelConfig.model,
             messages: messages,
