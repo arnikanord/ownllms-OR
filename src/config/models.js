@@ -21,7 +21,7 @@ export const modelConfigs = {
     'o1-preview': {
         name: 'O1 Preview',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "o1-preview",
+        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",  // Changed to a more stable model
         apiType: 'together',
         supportsVision: false
     },

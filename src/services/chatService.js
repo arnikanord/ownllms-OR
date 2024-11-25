@@ -126,4 +126,38 @@ export class ChatService {
         });
         return response.choices[0].message.content;
     }
+
+    addMessageToChat(content, isUser = false, isImage = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        
+        if (isImage && content.startsWith('http')) {
+            const img = document.createElement('img');
+            img.src = content;
+            img.className = 'generated-image';
+            messageDiv.appendChild(img);
+        } else {
+            messageDiv.textContent = content;
+            
+            // Add copy button for bot messages
+            if (!isUser) {
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-button';
+                copyButton.innerHTML = '📋';
+                copyButton.title = 'Copy to clipboard';
+                copyButton.onclick = () => {
+                    navigator.clipboard.writeText(content);
+                    copyButton.innerHTML = '✓';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '📋';
+                    }, 2000);
+                };
+                messageDiv.appendChild(copyButton);
+            }
+        }
+        
+        const outputWindow = document.getElementById('outputWindow');
+        outputWindow.appendChild(messageDiv);
+        outputWindow.scrollTop = outputWindow.scrollHeight;
+    }
 }
