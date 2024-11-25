@@ -1,0 +1,34 @@
+{
+  "name": "grog-chat-interface",
+  "version": "1.0.0",
+  "description": "Multi-model AI chat interface with file upload capabilities",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.17.1",
+    "dotenv": "^16.3.1",
+    "openai": "^4.28.0"
+  },
+  "devDependencies": {
+    "vite": "^2.9.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/grog-chat-interface.git"
+  },
+  "keywords": [
+    "ai",
+    "chat",
+    "llama",
+    "gpt",
+    "claude",
+    "gemma"
+  ],
+  "author": "",
+  "license": "MIT"
+}
