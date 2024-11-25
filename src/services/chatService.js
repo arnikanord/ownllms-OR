@@ -3,6 +3,7 @@ import { modelConfigs, createClient } from '../config/models.js';
 export class ChatService {
     constructor(modelId) {
         this.setModel(modelId);
+        this.conversationHistory = [];
     }
 
     setModel(modelId) {
@@ -14,40 +15,51 @@ export class ChatService {
 
     async sendMessage(message, files = []) {
         try {
-            const messages = this.prepareMessages(message, files);
+            const messages = await this.prepareMessages(message, files);
+            let response;
             
             switch (this.clientType) {
                 case 'openai':
-                    return await this.handleOpenAIRequest(messages);
+                    response = await this.handleOpenAIRequest(messages);
+                    break;
                 case 'anthropic':
-                    return await this.handleAnthropicRequest(messages);
+                    response = await this.handleAnthropicRequest(messages);
+                    break;
                 case 'together':
-                    return await this.handleTogetherRequest(messages);
+                    response = await this.handleTogetherRequest(messages);
+                    break;
                 default:
                     throw new Error(`Unsupported client type: ${this.clientType}`);
             }
+
+            // Add the user message and assistant response to conversation history
+            this.conversationHistory.push({ role: "user", content: message });
+            this.conversationHistory.push({ role: "assistant", content: response });
+
+            return response;
         } catch (error) {
             console.error('Error sending message:', error);
             throw error;
         }
     }
 
-    prepareMessages(message, files) {
+    async prepareMessages(message, files) {
         const baseMessages = [
             {
                 role: "system",
                 content: "You are an AI assistant who knows everything."
             },
+            ...this.conversationHistory,
             {
                 role: "user",
-                content: this.modelConfig.supportsVision ? this.prepareMultiModalContent(message, files) : message
+                content: this.modelConfig.supportsVision ? await this.prepareMultiModalContent(message, files) : message
             }
         ];
 
         return baseMessages;
     }
 
-    prepareMultiModalContent(message, files) {
+    async prepareMultiModalContent(message, files) {
         if (!files.length) return message;
 
         const content = [
@@ -57,18 +69,31 @@ export class ChatService {
             }
         ];
 
-        files.forEach(file => {
+        for (const file of files) {
             if (file.type.startsWith('image/')) {
+                const base64 = await this.fileToBase64(file);
                 content.push({
                     type: "image_url",
                     image_url: {
-                        url: URL.createObjectURL(file)
+                        url: `data:${file.type};base64,${base64}`
                     }
                 });
             }
-        });
+        }
 
         return content;
+    }
+
+    fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const base64String = reader.result.split(',')[1];
+                resolve(base64String);
+            };
+            reader.onerror = error => reject(error);
+        });
     }
 
     async handleOpenAIRequest(messages) {
@@ -85,10 +110,10 @@ export class ChatService {
             model: this.modelConfig.model,
             max_tokens: 2048,
             system: messages[0].content,
-            messages: [{ 
-                role: "user", 
-                content: messages[1].content 
-            }]
+            messages: messages.slice(1).map(msg => ({ 
+                role: msg.role, 
+                content: msg.content 
+            }))
         });
         return response.content;
     }
