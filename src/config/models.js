@@ -21,7 +21,7 @@ export const modelConfigs = {
     'o1-preview': {
         name: 'O1 Preview',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",  // Changed to a more stable model
+        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
         apiType: 'together',
         supportsVision: false
     },
@@ -35,7 +35,7 @@ export const modelConfigs = {
     'claude-sonnet': {
         name: 'Claude 3.5 Sonnet',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "claude-3-5-sonnet-20241022",
+        model: "anthropic/claude-3-sonnet-20240229",  // Updated model name
         apiType: 'together',
         supportsVision: false
     },
@@ -46,22 +46,4 @@ export const modelConfigs = {
         apiType: 'together',
         supportsVision: false
     }
-};
-
-export const createClient = (modelId) => {
-    const config = modelConfigs[modelId];
-    
-    if (!API_KEY) {
-        throw new Error('API key not found. Please set the VITE_API_KEY environment variable.');
-    }
-    
-    // Using OpenAI's client format since Together API is compatible with it
-    return {
-        type: 'together',
-        client: new OpenAI({
-            apiKey: API_KEY,
-            baseURL: config.baseUrl,
-            dangerouslyAllowBrowser: true
-        })
-    };
 };

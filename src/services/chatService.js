@@ -13,34 +13,56 @@ export class ChatService {
         this.clientType = type;
     }
 
-    async sendMessage(message, files = []) {
+    async sendMessage(message, files = [], isImageGeneration = false) {
         try {
             const messages = await this.prepareMessages(message, files);
             let response;
             
-            switch (this.clientType) {
-                case 'openai':
-                    response = await this.handleOpenAIRequest(messages);
-                    break;
-                case 'anthropic':
-                    response = await this.handleAnthropicRequest(messages);
-                    break;
-                case 'together':
-                    response = await this.handleTogetherRequest(messages);
-                    break;
-                default:
-                    throw new Error(`Unsupported client type: ${this.clientType}`);
-            }
+            if (isImageGeneration) {
+                response = await this.handleImageGeneration(message);
+            } else {
+                switch (this.clientType) {
+                    case 'openai':
+                        response = await this.handleOpenAIRequest(messages);
+                        break;
+                    case 'anthropic':
+                        response = await this.handleAnthropicRequest(messages);
+                        break;
+                    case 'together':
+                        response = await this.handleTogetherRequest(messages);
+                        break;
+                    default:
+                        throw new Error(`Unsupported client type: ${this.clientType}`);
+                }
 
-            // Add the user message and assistant response to conversation history
-            this.conversationHistory.push({ role: "user", content: message });
-            this.conversationHistory.push({ role: "assistant", content: response });
+                // Add the user message and assistant response to conversation history
+                this.conversationHistory.push({ role: "user", content: message });
+                this.conversationHistory.push({ role: "assistant", content: response });
+            }
 
             return response;
         } catch (error) {
             console.error('Error sending message:', error);
             throw error;
         }
+    }
+
+    async handleImageGeneration(prompt) {
+        const response = await this.client.chat.completions.create({
+            model: "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are an AI that generates images based on text descriptions."
+                },
+                {
+                    role: "user",
+                    content: `Generate an image of: ${prompt}`
+                }
+            ],
+            max_tokens: 1024
+        });
+        return response.choices[0].message.content;
     }
 
     async prepareMessages(message, files) {
@@ -137,22 +159,28 @@ export class ChatService {
             img.className = 'generated-image';
             messageDiv.appendChild(img);
         } else {
-            messageDiv.textContent = content;
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            textDiv.textContent = content;
+            messageDiv.appendChild(textDiv);
             
             // Add copy button for bot messages
             if (!isUser) {
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'message-buttons';
+                
                 const copyButton = document.createElement('button');
-                copyButton.className = 'copy-button';
-                copyButton.innerHTML = '📋';
-                copyButton.title = 'Copy to clipboard';
+                copyButton.className = 'message-action-button';
+                copyButton.textContent = 'Copy Output';
                 copyButton.onclick = () => {
                     navigator.clipboard.writeText(content);
-                    copyButton.innerHTML = '✓';
+                    copyButton.textContent = 'Copied!';
                     setTimeout(() => {
-                        copyButton.innerHTML = '📋';
+                        copyButton.textContent = 'Copy Output';
                     }, 2000);
                 };
-                messageDiv.appendChild(copyButton);
+                buttonContainer.appendChild(copyButton);
+                messageDiv.appendChild(buttonContainer);
             }
         }
         

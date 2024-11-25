@@ -65,7 +65,6 @@ body {
     padding: 12px;
     border-radius: 8px;
     max-width: 80%;
-    position: relative;
 }
 
 .user-message {
@@ -78,35 +77,34 @@ body {
     background: #f5f5f5;
     margin-right: auto;
     color: #1a1a1a;
-    padding-right: 40px; /* Make space for copy button */
 }
 
-.copy-button {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    background: transparent;
-    border: none;
-    padding: 4px;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    font-size: 16px;
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
+.message-text {
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+}
+
+.message-buttons {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.bot-message:hover .copy-button {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.05);
+.message-action-button {
+    background: #2196f3;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: normal;
+    transition: background-color 0.2s;
 }
 
-.copy-button:hover {
-    background: rgba(0, 0, 0, 0.1) !important;
+.message-action-button:hover {
+    background: #1976d2;
 }
 
 .input-container {
