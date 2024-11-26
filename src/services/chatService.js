@@ -1,4 +1,12 @@
 import { modelConfigs, createClient } from '../config/models.js';
+import { marked } from 'marked';
+
+// Configure marked options
+marked.setOptions({
+    breaks: true,  // Add line breaks
+    gfm: true,     // Enable GitHub Flavored Markdown
+    headerIds: false // Disable header IDs to prevent conflicts
+});
 
 export class ChatService {
     constructor(modelId) {
@@ -69,7 +77,7 @@ export class ChatService {
         const baseMessages = [
             {
                 role: "system",
-                content: "You are an AI assistant who knows everything."
+                content: "You are an AI assistant who knows everything. Use markdown formatting in your responses to make them more readable."
             },
             ...this.conversationHistory,
             {
@@ -175,8 +183,15 @@ export class ChatService {
             messageDiv.appendChild(img);
         } else {
             const textDiv = document.createElement('div');
-            textDiv.className = 'message-text';
-            textDiv.textContent = content;
+            textDiv.className = 'message-text markdown-content';
+            
+            // Parse markdown for bot messages, keep plain text for user messages
+            if (isUser) {
+                textDiv.textContent = content;
+            } else {
+                textDiv.innerHTML = marked(content);
+            }
+            
             messageDiv.appendChild(textDiv);
             
             // Add copy button for bot messages
