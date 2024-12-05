@@ -61,11 +61,37 @@ body {
 }
 
 .message {
-    margin-bottom: 20px;
-    padding: 12px;
+    position: relative;
+    margin: 10px;
+    padding: 10px;
     border-radius: 8px;
     max-width: 80%;
-    line-height: 1.6;
+    word-wrap: break-word;
+}
+
+.message-content {
+    padding-right: 30px;
+}
+
+.copy-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 16px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.copy-button:hover {
+    opacity: 1;
+}
+
+.message:hover .copy-button {
+    opacity: 1;
 }
 
 .user-message {

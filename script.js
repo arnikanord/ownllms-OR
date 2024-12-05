@@ -146,18 +146,48 @@ class ChatInterface {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
         
+        // Create a message content wrapper
+        const contentWrapper = document.createElement('div');
+        contentWrapper.className = 'message-content';
+        
         if (isImage && content.startsWith('http')) {
             const img = document.createElement('img');
             img.src = content;
             img.className = 'generated-image';
-            messageDiv.appendChild(img);
+            contentWrapper.appendChild(img);
         } else if (isUser) {
-            // For user messages, keep as plain text
-            messageDiv.textContent = content;
+            contentWrapper.textContent = content;
         } else {
-            // For bot messages, parse markdown
             const parsedContent = marked(content);
-            messageDiv.innerHTML = parsedContent;
+            contentWrapper.innerHTML = parsedContent;
+        }
+        
+        messageDiv.appendChild(contentWrapper);
+        
+        // Add copy button for non-empty messages
+        if (content.trim()) {
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-button';
+            copyButton.innerHTML = '📋';
+            copyButton.title = 'Copy to clipboard';
+            copyButton.onclick = async () => {
+                try {
+                    // Get the text content, handling both plain text and HTML content
+                    const textToCopy = isImage ? content : contentWrapper.textContent;
+                    await navigator.clipboard.writeText(textToCopy);
+                    copyButton.innerHTML = '✓';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '📋';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text:', err);
+                    copyButton.innerHTML = '❌';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '📋';
+                    }, 2000);
+                }
+            };
+            messageDiv.appendChild(copyButton);
         }
         
         this.outputWindow.appendChild(messageDiv);
