@@ -1,4 +1,5 @@
 import { ChatService } from './src/services/chatService.js';
+import { marked } from 'marked';
 
 class ChatInterface {
     constructor() {
@@ -6,6 +7,16 @@ class ChatInterface {
         this.uploadedFiles = [];
         this.initializeElements();
         this.attachEventListeners();
+        this.setupMarkdown();
+    }
+
+    setupMarkdown() {
+        // Configure marked options for security
+        marked.setOptions({
+            breaks: true, // Enable GitHub Flavored Markdown line breaks
+            sanitize: false, // Disable sanitization to allow HTML
+            gfm: true // Enable GitHub Flavored Markdown
+        });
     }
 
     initializeElements() {
@@ -140,8 +151,13 @@ class ChatInterface {
             img.src = content;
             img.className = 'generated-image';
             messageDiv.appendChild(img);
-        } else {
+        } else if (isUser) {
+            // For user messages, keep as plain text
             messageDiv.textContent = content;
+        } else {
+            // For bot messages, parse markdown
+            const parsedContent = marked(content);
+            messageDiv.innerHTML = parsedContent;
         }
         
         this.outputWindow.appendChild(messageDiv);
