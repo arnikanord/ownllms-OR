@@ -1,5 +1,6 @@
 import { ChatService } from './src/services/chatService.js';
 import { marked } from 'marked';
+import { modelConfigs } from './src/config/models.js';
 
 class ChatInterface {
     constructor() {
