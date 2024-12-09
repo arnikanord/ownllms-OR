@@ -21,14 +21,14 @@ export const modelConfigs = {
     'gemini-pro': {
         name: 'Gemini 1.5 Pro',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "google/gemini-1.5-pro",
+        model: "gemini-1.5-pro",
         apiType: 'together',
         supportsVision: true
     },
     'gemini-flash': {
         name: 'Gemini 1.5 Flash',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "google/gemini-1.5-flash",
+        model: "gemini-1.5-flash",
         apiType: 'together',
         supportsVision: false
     },
