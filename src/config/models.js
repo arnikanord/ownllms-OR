@@ -18,10 +18,17 @@ export const modelConfigs = {
         apiType: 'together',
         supportsVision: true
     },
-    'o1-preview': {
-        name: 'O1 Preview',
+    'gemini-pro': {
+        name: 'Gemini 1.5 Pro',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
+        model: "gemini-1.5-pro",
+        apiType: 'together',
+        supportsVision: true
+    },
+    'gemini-flash': {
+        name: 'Gemini 1.5 Flash',
+        baseUrl: "https://api.aimlapi.com/v1",
+        model: "gemini-1.5-flash",
         apiType: 'together',
         supportsVision: false
     },
