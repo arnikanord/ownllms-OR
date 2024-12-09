@@ -15,6 +15,10 @@ export class ChatService {
     }
 
     setModel(modelId) {
+        if (!modelConfigs[modelId]) {
+            throw new Error(`Model configuration not found for model: ${modelId}`);
+        }
+        
         this.modelConfig = modelConfigs[modelId];
         const { client, type } = createClient(modelId);
         this.client = client;
@@ -74,6 +78,10 @@ export class ChatService {
     }
 
     async prepareMessages(message, files) {
+        if (!this.modelConfig) {
+            throw new Error('Model configuration not found');
+        }
+
         const baseMessages = [
             {
                 role: "system",
@@ -82,7 +90,9 @@ export class ChatService {
             ...this.conversationHistory,
             {
                 role: "user",
-                content: this.modelConfig.supportsVision ? await this.prepareMultiModalContent(message, files) : message
+                content: this.modelConfig.supportsVision && files.length > 0 ? 
+                    await this.prepareMultiModalContent(message, files) : 
+                    message
             }
         ];
 
