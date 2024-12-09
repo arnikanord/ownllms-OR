@@ -29,6 +29,20 @@ class ChatInterface {
         this.modelSelector = document.getElementById('modelSelector');
         this.fileUpload = document.getElementById('fileUpload');
         this.filePreview = document.getElementById('filePreview');
+        this.populateModelSelector();
+    }
+
+    populateModelSelector() {
+        // Clear existing options
+        this.modelSelector.innerHTML = '';
+        
+        // Add options from modelConfigs
+        Object.entries(modelConfigs).forEach(([modelId, config]) => {
+            const option = document.createElement('option');
+            option.value = modelId;
+            option.textContent = config.name;
+            this.modelSelector.appendChild(option);
+        });
     }
 
     attachEventListeners() {
