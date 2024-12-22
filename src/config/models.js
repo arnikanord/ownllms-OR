@@ -7,7 +7,7 @@ export const modelConfigs = {
     'grok-beta': {
         name: 'Grog Beta',
         baseUrl: "https://api.aimlapi.com/v1",
-        model: "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
+        model: "x-ai/grok-beta",
         apiType: 'together',
         supportsVision: true
     },
