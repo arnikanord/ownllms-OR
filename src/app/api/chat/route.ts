@@ -1,30 +1,34 @@
 import { OpenAI } from 'openai';
-import { NextResponse } from 'next/server';
+import createClient from '@/config/models';
 
-const client = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
-
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const { messages, model } = await req.json();
+    const { messages, model } = await request.json();
+    const { client, type } = createClient(model);
 
     const completion = await client.chat.completions.create({
       model: model,
-      messages: messages,
-      extra_headers: {
-        "HTTP-Referer": process.env.SITE_URL || "http://localhost:3000",
-        "X-Title": "AI Chat App",
-      },
+      messages: messages.map((msg: any) => ({
+        role: msg.role,
+        content: msg.content
+      }))
     });
 
-    return NextResponse.json(completion.choices[0].message);
+    return new Response(JSON.stringify({
+      role: 'assistant',
+      content: completion.choices[0].message.content
+    }), {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    console.error('Error in chat route:', error);
+    return new Response(JSON.stringify({ error: 'Failed to process request' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 } 
