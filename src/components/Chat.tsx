@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IoSend, IoCopy, IoCheckmark, IoExpand, IoContract } from 'react-icons/io5';
-import { IconBaseProps } from 'react-icons';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import ModelSelector from './ModelSelector';
@@ -11,10 +10,6 @@ import '../index.css';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
-}
-
-interface CopyButtonProps extends IconBaseProps {
-  className?: string;
 }
 
 // Configure marked options

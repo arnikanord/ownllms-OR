@@ -1,13 +1,10 @@
-import React from 'react';
 import Chat from './components/Chat';
-import './styles.css';
+import './App.css';
 
-function App() {
+export default function App() {
   return (
-    <div className="app">
+    <div className="App">
       <Chat />
     </div>
   );
-}
-
-export default App; 
+} 

@@ -1,49 +1,44 @@
-import { OpenAI } from 'openai';
-import createClient, { modelConfigs, ModelConfig } from '@/config/models';
+import { modelConfigs } from '../../../config/models';
 
 export async function POST(request: Request) {
   try {
     const { messages, model } = await request.json();
-    
-    // Find the model ID from the full model name
-    const modelId = Object.entries(modelConfigs).find(
-      ([_, config]: [string, ModelConfig]) => config.model === model
-    )?.[0];
 
-    if (!modelId) {
-      return new Response(JSON.stringify({ error: `Invalid model: ${model}` }), {
-        status: 400,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+    // Validate request body
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return new Response(JSON.stringify({ 
+        error: 'Invalid messages format',
+        details: 'Messages must be a non-empty array of message objects'
+      }), { status: 400 });
     }
 
-    const { client, type } = createClient(modelId);
+    // Validate model exists
+    const modelConfig = modelConfigs[model];
+    if (!modelConfig) {
+      return new Response(JSON.stringify({ 
+        error: 'Invalid model ID',
+        details: `Model '${model}' is not supported`
+      }), { status: 400 });
+    }
 
-    const completion = await client.chat.completions.create({
-      model: model,
-      messages: messages.map((msg: any) => ({
-        role: msg.role,
-        content: msg.content
-      }))
-    });
-
-    return new Response(JSON.stringify({
-      role: 'assistant',
-      content: completion.choices[0].message.content
-    }), {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ messages, model }),
     });
-  } catch (error) {
+
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+  } catch (error: any) {
     console.error('Error in chat route:', error);
-    return new Response(JSON.stringify({ error: 'Failed to process request' }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    return new Response(JSON.stringify({ 
+      error: 'Failed to process request',
+      details: error.message
+    }), { status: 500 });
   }
 } 
