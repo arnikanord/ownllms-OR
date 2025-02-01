@@ -1,10 +1,25 @@
 import { OpenAI } from 'openai';
-import createClient from '@/config/models';
+import createClient, { modelConfigs, ModelConfig } from '@/config/models';
 
 export async function POST(request: Request) {
   try {
     const { messages, model } = await request.json();
-    const { client, type } = createClient(model);
+    
+    // Find the model ID from the full model name
+    const modelId = Object.entries(modelConfigs).find(
+      ([_, config]: [string, ModelConfig]) => config.model === model
+    )?.[0];
+
+    if (!modelId) {
+      return new Response(JSON.stringify({ error: `Invalid model: ${model}` }), {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+    }
+
+    const { client, type } = createClient(modelId);
 
     const completion = await client.chat.completions.create({
       model: model,

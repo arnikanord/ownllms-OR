@@ -3,72 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenRouter Chat Interface</title>
-    <script type="module">
-        import './styles.css'
-    </script>
+    <title>Grog Chat</title>
 </head>
 <body>
-    <div class="container">
-        <div class="chat-container">
-            <div class="header">
-                <h1>OpenRouter Chat Interface</h1>
-                <div class="controls">
-                    <select id="modelSelector" class="model-selector">
-                        <!-- Free Models -->
-                        <option value="google/gemini-2.0-flash-thinking-experimental-01-21">Gemini 2.0 Flash Thinking (Free)</option>
-                        <option value="google/gemini-flash-2.0-experimental">Gemini Flash 2.0 (Free)</option>
-                        <option value="google/gemini-experimental-1206">Gemini 1206 (Free)</option>
-                        <option value="deepseek/deepseek-r1-free">DeepSeek R1 (Free)</option>
-                        <option value="rogue-rose-103b-v0.2">Rogue Rose 103B (Free)</option>
-                        
-                        <!-- Very Low Cost Models ($0.01-$0.05/M) -->
-                        <option value="liquid/lfm-7b">Liquid LFM 7B ($0.01/1M)</option>
-                        <option value="liquid/lfm-3b">Liquid LFM 3B ($0.02/1M)</option>
-                        <option value="amazon/nova-micro-1.0">Amazon Nova Micro ($0.035/1M)</option>
-                        <option value="cohere/command-r7b">Cohere Command R7B ($0.0375/1M)</option>
-                        
-                        <!-- Low Cost Models ($0.05-$0.5/M) -->
-                        <option value="amazon/nova-lite-1.0">Amazon Nova Lite ($0.06/1M)</option>
-                        <option value="meta-llama/llama-3.3-70b-instruct">Meta Llama 3.3 70B ($0.12/1M)</option>
-                        <option value="qwen/qwq-32b-preview">Qwen QwQ 32B ($0.12/1M)</option>
-                        <option value="deepseek/deepseek-r1-distill-llama-70b">DeepSeek R1 Distill ($0.23/1M)</option>
-
-                        <!-- Medium Cost Models ($0.5-$2/M) -->
-                        <option value="sao10k/llama-3.3-euryale-70b">Sao10K Euryale 70B ($0.7/1M)</option>
-                        <option value="amazon/nova-pro-1.0">Amazon Nova Pro ($0.8/1M)</option>
-                        <option value="perplexity/sonar">Perplexity Sonar ($1/1M)</option>
-                        <option value="perplexity/sonar-reasoning">Perplexity Sonar Reasoning ($1/1M)</option>
-                        
-                        <!-- High Cost Models ($2+/M) -->
-                        <option value="xai/grok-2-1212">xAI Grok 2 ($2/1M)</option>
-                        <option value="xai/grok-2-vision-1212">xAI Grok 2 Vision ($2/1M)</option>
-                        <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet ($3/1M)</option>
-                        <option value="eva-unit-01/eva-llama-3.33-70b">EVA Llama 3.33 70B ($4/1M)</option>
-                        <option value="deepseek/deepseek-r1">DeepSeek R1 ($6.5/1M)</option>
-                        <option value="deepseek/deepseek-r1-nitro">DeepSeek R1 Nitro ($7/1M)</option>
-                        <option value="openai/o1">OpenAI O1 ($15/1M)</option>
-                    </select>
-                    <button id="clearMemory" class="clear-btn">Clear Chat</button>
-                </div>
-            </div>
-            <div class="output-window" id="outputWindow">
-                <!-- Chat messages will appear here -->
-            </div>
-            <div class="input-container">
-                <div class="file-upload-container">
-                    <input type="file" id="fileUpload" multiple class="file-input" accept="image/*,text/*,application/pdf">
-                    <div id="filePreview" class="file-preview"></div>
-                </div>
-                <textarea id="userInput" placeholder="Type your message here..." rows="3"></textarea>
-                <div class="button-container">
-                    <button id="sendMessage" class="send-btn">Send</button>
-                    <button id="generateImage" class="image-btn">Generate Image</button>
-                    <button id="saveArtifact" class="artifact-btn">Save as Artifact</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script type="module" src="./src/main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

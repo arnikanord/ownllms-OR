@@ -4,10 +4,8 @@ import type { ModelConfig } from '../config/models';
 export class ChatService {
   private currentModelId: string;
   private client!: ReturnType<typeof createClient>['client'];
-  private apiKey: string;
 
-  constructor(initialModelId: string = 'grok-beta') {
-    this.apiKey = import.meta.env.VITE_API_KEY;
+  constructor(initialModelId: string = 'claude-3-sonnet') {
     this.currentModelId = initialModelId;
     this.initializeClient();
   }
@@ -20,8 +18,9 @@ export class ChatService {
   async sendMessage(message: string) {
     try {
       console.log('Sending message to model:', this.currentModelId);
-      const completion = await this.client.chat.completions.create({
-        model: createClient(this.currentModelId).model,
+      const { client, model } = createClient(this.currentModelId);
+      const completion = await client.chat.completions.create({
+        model: model,
         messages: [{ role: "user", content: message }],
         stream: false
       });

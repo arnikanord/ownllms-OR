@@ -4,7 +4,7 @@ import { modelConfigs } from './src/config/models.js';
 
 class ChatInterface {
     constructor() {
-        this.chatService = new ChatService('grok-beta'); // Set Grog Beta as default
+        this.chatService = new ChatService('claude-3-sonnet'); // Set Claude 3.5 Sonnet as default
         this.uploadedFiles = [];
         this.initializeElements();
         this.attachEventListeners();
