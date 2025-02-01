@@ -1,13 +1,19 @@
 [build]
-  command = "npm run dev"
+  command = "npm run build"
   publish = "dist"
+  functions = "netlify/functions"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+[build.environment]
+  NODE_VERSION = "18"
 
 [dev]
   command = "npm run dev"
-  port = 3000
+  port = 3001
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"
