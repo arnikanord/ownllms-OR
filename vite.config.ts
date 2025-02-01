@@ -11,10 +11,12 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3002',
+        target: process.env.NODE_ENV === 'production' 
+          ? '/.netlify/functions/api'
+          : 'http://localhost:3002',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     },
     middlewareMode: false
