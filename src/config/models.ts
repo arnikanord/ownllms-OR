@@ -431,6 +431,28 @@ export const modelConfigs: Record<string, ModelConfig> = {
     inputPrice: 0.12,
     outputPrice: 0.18,
     contextSize: 32768
+  },
+  'deepseek-qwen-1.5b': {
+    id: 'deepseek-qwen-1.5b',
+    name: 'Deepseek R1 Distill Qwen 1.5B',
+    baseUrl: "https://openrouter.ai/api/v1",
+    model: "deepseek/deepseek-r1-distill-qwen-1.5b",
+    apiType: 'together',
+    supportsVision: false,
+    inputPrice: 0.18,
+    outputPrice: 0.18,
+    contextSize: 131072
+  },
+  'mistral-small': {
+    id: 'mistral-small',
+    name: 'Mistral Small 3',
+    baseUrl: "https://openrouter.ai/api/v1",
+    model: "mistralai/mistral-small-24b-instruct-2501",
+    apiType: 'together',
+    supportsVision: false,
+    inputPrice: 0.07,
+    outputPrice: 0.14,
+    contextSize: 32768
   }
 };
 
